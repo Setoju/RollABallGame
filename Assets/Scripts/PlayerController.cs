@@ -48,8 +48,24 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (rb.position.y < -1)
+        {
+            Lose();
+        }
+
         Vector3 movement = new Vector3(movementX, 0.0f, movementY);
         rb.AddForce(movement * speed);
+    }
+
+    private void Lose()
+    {
+        Destroy(gameObject);
+        winTextObject.gameObject.SetActive(true);
+        winTextObject.GetComponent<TextMeshProUGUI>().text = "You Lose!";
+        loseSound.Play();
+        backgroundMusic.Stop();
+        restartButton.SetActive(true);
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -92,12 +108,7 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy") && isInvincible == false)
         {
-            Destroy(gameObject);
-            winTextObject.gameObject.SetActive(true);
-            winTextObject.GetComponent<TextMeshProUGUI>().text = "You Lose!";
-            loseSound.Play();
-            backgroundMusic.Stop();
-            restartButton.SetActive(true);
+            Lose();
         }
 
         hitSound.Play();
